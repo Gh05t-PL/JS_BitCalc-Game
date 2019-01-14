@@ -59,16 +59,10 @@
                 </div>
             </div>
             <div class="bitset">
-            <!-- <button onclick="getMatrixOfBits()">getMatrixOfBits</button>
-                <button onclick="getColumn(getMatrixOfBits(),1)">getColumn(getMatrixOfBits(),1)</button>
-                <button onclick="checkBitsWithResult()">checkBitsWithResult()</button>
-                <button onclick="generateRandomValues()">click4random</button> -->
                 <button onclick="startGame()">Start Game</button>
                 <button onclick="stopGame()">Stop Game</button>
                 <button onclick="resizeMatrix()">Resize Matrix</button>       
                 <input type="text" class="dimension">
-                <!-- <button onclick="checkColumnWithResult(0)">checkColumnWithResult(0)</button>
-                <button onclick="checkRowWithResult(0)">checkRowWithResult(0)</button> -->
                 <p class="counter">00:00:00</p>
             </div>
         </div>
@@ -90,7 +84,6 @@
             var bitRowElement = document.createElement("div");
             bitRowElement.classList.add("bit-row");
             for (let index = 0; index < dimension+1; index++) {
-                console.log(index)
                 if (index == dimension){
                     var valueVelement = document.createElement("div");
                     valueVelement.innerHTML = "0";
@@ -113,11 +106,6 @@
                 bitElement.innerHTML = "0";
                 bitElement.classList.add("value-h")
                 bitRowElement.appendChild(bitElement);
-                // if (index == dimension+1){
-                //     var valueVelement = document.createElement("div");
-                //     valueVelement.innerHTML = "0";
-                //     valueVelement.classList.add("value-v")
-                // }
         }
         bitsetElement.appendChild(bitRowElement);
         
@@ -175,7 +163,7 @@
             else
                 item.innerHTML = "1";
             if (checkBitsWithResult()){
-                console.log("jest git elo");
+                console.log("Winner");
                 clearInterval(interval);
             }
             checker();
@@ -222,10 +210,10 @@
             e.innerHTML = number;
             bitMatrix.push(number.toString(2).length < dimension ? "0".repeat(dimension-number.toString(2).length)+number.toString(2) : number.toString(2));
         })
-        console.log(bitMatrix);
+        //console.log(bitMatrix);
         elements = document.querySelectorAll("div.value-h");
         for (let index = 0; index < bitMatrix.length; index++){
-            console.log("0b"+getColumnS(bitMatrix,index).join(""));
+            //console.log("0b"+getColumnS(bitMatrix,index).join(""));
             elements[index].innerHTML = Number("0b"+getColumnS(bitMatrix,index).join(""));
         }
     }
