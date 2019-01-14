@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css" integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/" crossorigin="anonymous">
+    <title>BitGame - Binary Calculator</title>
+    <link rel="stylesheet" href="/bitGame.css">
+</head>
+<body>
+<div class="wapper">
+    <div class="header grid">
+        <div class="center-grid">
+            <h1 class="logo">BitGame.io</h1>
+            <div class="menu">
+                <div class="menu-bar"></div>
+                <div class="menu-bar"></div>
+                <div class="menu-bar"></div>
+            </div>
+        </div>
+    </div>
+    <div class="content grid">
+        <div class="bitsets">
+            <div class="bitset">
+                <div class="bit-row">
+                    <div class="bit">0</div>
+                    <div class="bit">0</div>
+                    <div class="bit">0</div>
+                    <div class="bit">0</div>
+                    <div class="value-v">0</div>
+                </div>
+                <div class="bit-row">
+                    <div class="bit">0</div>
+                    <div class="bit">0</div>
+                    <div class="bit">0</div>
+                    <div class="bit">0</div>
+                    <div class="value-v">0</div>
+                </div>
+                <div class="bit-row">
+                    <div class="bit">0</div>
+                    <div class="bit">0</div>
+                    <div class="bit">0</div>
+                    <div class="bit">0</div>
+                    <div class="value-v">0</div>
+                </div>
+                <div class="bit-row">
+                    <div class="bit">0</div>
+                    <div class="bit">0</div>
+                    <div class="bit">0</div>
+                    <div class="bit">0</div>
+                    <div class="value-v">0</div>
+                </div>
+                <div class="bit-row">
+                    <div class="value-h">0</div>
+                    <div class="value-h">0</div>
+                    <div class="value-h">0</div>
+                    <div class="value-h">0</div>
+                </div>
+            </div>
+            <div class="bitset">
+            <!-- <button onclick="getMatrixOfBits()">getMatrixOfBits</button>
+                <button onclick="getColumn(getMatrixOfBits(),1)">getColumn(getMatrixOfBits(),1)</button>
+                <button onclick="checkBitsWithResult()">checkBitsWithResult()</button>
+                <button onclick="generateRandomValues()">click4random</button> -->
+                <button onclick="startGame()">Start Game</button>
+                <button onclick="stopGame()">Stop Game</button>
+                <button onclick="resizeMatrix()">Resize Matrix</button>       
+                <input type="text" class="dimension">
+                <!-- <button onclick="checkColumnWithResult(0)">checkColumnWithResult(0)</button>
+                <button onclick="checkRowWithResult(0)">checkRowWithResult(0)</button> -->
+                <p class="counter">00:00:00</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    var interval;
+    var counterElement = document.querySelector("p.counter");
+    var dimension = 4;
+
+    function resizeMatrix(){
+        dimension = Number(document.querySelector("input.dimension").value);
+        var bitsetElement = document.querySelector("div.bitset");
+
+        bitsetElement.innerHTML = "";
+        getCSSRule(".bit-row").style.gridTemplateColumns ="1fr ".repeat(dimension+1)
+        for (let index = 0; index < dimension; index++) {
+            var bitRowElement = document.createElement("div");
+            bitRowElement.classList.add("bit-row");
+            for (let index = 0; index < dimension+1; index++) {
+                console.log(index)
+                if (index == dimension){
+                    var valueVelement = document.createElement("div");
+                    valueVelement.innerHTML = "0";
+                    valueVelement.classList.add("value-v");
+                    bitRowElement.appendChild(valueVelement);
+                    break;
+                }
+                var bitElement = document.createElement("div");
+                bitElement.innerHTML = "0";
+                bitElement.classList.add("bit");
+                bitRowElement.appendChild(bitElement);
+                
+            }
+            bitsetElement.appendChild(bitRowElement);
+        }
+        var bitRowElement = document.createElement("div");
+        bitRowElement.classList.add("bit-row");
+        for (let index = 0; index < dimension; index++) {
+                var bitElement = document.createElement("div");
+                bitElement.innerHTML = "0";
+                bitElement.classList.add("value-h")
+                bitRowElement.appendChild(bitElement);
+                // if (index == dimension+1){
+                //     var valueVelement = document.createElement("div");
+                //     valueVelement.innerHTML = "0";
+                //     valueVelement.classList.add("value-v")
+                // }
+        }
+        bitsetElement.appendChild(bitRowElement);
+        
+        getAllBitsElement().forEach((item) => {
+            item.addEventListener("click",()=>{toggleBit(item)});
+            item.classList.add("bit-disabled");
+        })
+    }
+
+    function getCSSRule(selector){
+        var style = document.styleSheets[1];
+
+        for (let index = 0; index < style.rules.length; index++) {
+            if (style.rules[index].selectorText === selector)
+            return style.rules[index];
+        }
+    }
+
+    function startGame(){
+        generateRandomValues();
+        getAllBitsElement().forEach((e)=>{
+            e.classList.remove("bit-disabled");
+            e.innerHTML = "0";
+        });
+        clearInterval(interval);
+        document.querySelector("p.counter").innerHTML = "00:00:00";
+        startCounter();
+    }
+
+    function startCounter(){
+        var time = new Date().getTime();
+        
+        interval = setInterval(()=>{
+
+            var dist = (new Date().getTime()-time)*0.1;
+            var sec = ("0" + Math.floor( (dist/100) % 60 )).substr(-2);
+            var min = ("0" + Math.floor( (dist/100/60) % 60 )).substr(-2);
+            var msec = ("0" + Math.floor( dist % 100 )).substr(-2);
+            counterElement.innerHTML = min + ":" + sec + ":" + msec;
+        },10)
+    }
+
+    function stopGame(){
+        clearInterval(interval);
+        getAllBitsElement().forEach((e)=>{
+            e.classList.add("bit-disabled");
+        });
+    }
+
+    function toggleBit(item){
+        if (!item.classList.contains("bit-disabled")){
+            
+            if (item.innerHTML == "1")
+                item.innerHTML = "0";
+            else
+                item.innerHTML = "1";
+            if (checkBitsWithResult()){
+                console.log("jest git elo");
+                clearInterval(interval);
+            }
+            checker();
+        }
+    }
+
+    function getAllBitsElement(){
+        return document.querySelectorAll(".bit-row > div.bit");
+    }
+/*
+    function getAllBits(){
+        var elements = getAllBitsElement();
+        var bitstring = "";
+
+        elements.forEach((item)=>{
+            bitstring += item.innerHTML;
+        })
+        return bitstring;
+    }
+*/
+    function resetAllBits(){
+        var elements = getAllBitsElement();
+        elements.forEach((item) => {
+            item.innerHTML = "0";
+        })
+    }
+
+    function getMatrixOfBits(){
+        var elements = Array.from(getAllBitsElement());
+        var matrix = [];
+        while(elements.length) {
+            matrix.push(elements.splice(0,dimension));
+        }
+        //console.log(elements);
+        //console.log(matrix);
+        return matrix;
+    }
+
+    function generateRandomValues(){
+        var elements = document.querySelectorAll("div.value-v");
+        var bitMatrix = [];
+        elements.forEach((e)=>{
+            var number = Math.floor(Math.random() * getMaxValue(dimension))+1;
+            e.innerHTML = number;
+            bitMatrix.push(number.toString(2).length < dimension ? "0".repeat(dimension-number.toString(2).length)+number.toString(2) : number.toString(2));
+        })
+        console.log(bitMatrix);
+        elements = document.querySelectorAll("div.value-h");
+        for (let index = 0; index < bitMatrix.length; index++){
+            console.log("0b"+getColumnS(bitMatrix,index).join(""));
+            elements[index].innerHTML = Number("0b"+getColumnS(bitMatrix,index).join(""));
+        }
+    }
+
+    function getMaxValue(lenght){
+        var number = 0;
+        for (let i = 0; i < lenght; i++) {
+            number += 1<<i;
+        }
+        return number;
+    }
+
+    function checkBitsWithResult(){
+        var vResults = Array.from(document.querySelectorAll("div.value-v")).map((x)=>{
+            return x.innerHTML;
+        });
+        //console.log(vResults);
+        for (let index = 0; index < vResults.length; index++) {
+            var number = Number("0b"+getRowI(getMatrixOfBits(),index).join(""));
+            if (number != Number(vResults[index])){
+                console.error("nop zle powinno byc " + Number(vResults[index]).toString(2))
+                return false
+            }
+            //console.log(number);
+        }
+        return true
+    }
+
+    function checkColumnWithResult(column){
+        var result = Number(document.querySelectorAll("div.value-h")[column].innerHTML);
+        var numFromBits = Number("0b"+getColumnI(getMatrixOfBits(),column).join(""));
+
+        if (result == numFromBits)
+            return true;
+        return false;
+    }
+
+    function checkRowWithResult(row){
+        var result = Number(document.querySelectorAll("div.value-v")[row].innerHTML);
+        var numFromBits = Number("0b"+getRowI(getMatrixOfBits(),row).join(""));
+
+        if (result == numFromBits)
+            return true;
+        return false;
+    }
+
+    function checker(){
+        var matrix = getMatrixOfBits();
+
+        for (let index = 0; index < matrix.length; index++) {
+            if (checkColumnWithResult(index)){
+                getColumnE(matrix,index).forEach((e)=>{
+                    e.classList.add("bit-disabled")
+                })
+            }
+            if (checkRowWithResult(index)){
+                getRowE(matrix,index).forEach((e)=>{
+                    e.classList.add("bit-disabled")
+                })
+            }
+        }
+    }
+
+    function getColumnE(matrix,column){
+        var array = [];
+        for (let index = 0; index < matrix.length; index++) {
+            array.push(matrix[index][column]);
+        }
+        //console.log(array);
+        return array;
+    }
+
+    function getRowE(matrix,row){
+        var array = [];
+        for (let index = 0; index < matrix.length; index++) {
+            array.push(matrix[row][index]);
+        }
+        //console.log(array);
+        return array;
+    }
+
+    function getColumnI(matrix,column){
+        var array = [];
+        for (let index = 0; index < matrix.length; index++) {
+            array.push(matrix[index][column].innerHTML);
+        }
+        //console.log(array);
+        return array;
+    }
+
+    function getRowI(matrix,row){
+        var array = [];
+        for (let index = 0; index < matrix.length; index++) {
+            array.push(matrix[row][index].innerHTML);
+        }
+        //console.log(array);
+        return array;
+    }
+
+    function getColumnS(matrix,column){
+        var array = [];
+        for (let index = 0; index < matrix.length; index++) {
+            array.push(matrix[index].charAt(column));
+        }
+        //console.log(array);
+        return array;
+    }
+
+    function getRowS(matrix,row){
+        var array = [];
+        for (let index = 0; index < matrix.length; index++) {
+            array.push(matrix[row][index]);
+        }
+        //console.log(array);
+        return array;
+    }
+    // end of functions
+
+    var elements = getAllBitsElement();
+    elements.forEach((item) => {
+        item.addEventListener("click",()=>{toggleBit(item)});
+        item.classList.add("bit-disabled");
+    })
+</script>
+</body>
+</html>

@@ -1,0 +1,129 @@
+body,html {
+    margin: 0;
+}
+.grid {
+    display: grid;
+    grid-template-columns: 20px 1fr 20px;
+}
+.center-grid {
+    grid-column: 2 / 3;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+}
+
+.header {
+    background-color: #EBEBEB;
+}
+
+.logo {
+    align-self: center;
+    color: #9809E7;
+    font-size: 23px;
+}
+
+.menu {
+    align-self: center;
+    justify-self: end;
+}
+
+.menu-bar {
+    width: 35px;
+    height: 5px;
+    background-color: #9809E7;
+    margin: 6px 0;
+    transition: 0.4s;
+}
+
+.bitsets {
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-column: 2 / 3;
+    grid-gap: 30px;
+    color: #9809E7;
+    margin-top: 40px;
+    font-family: Arial;
+}
+
+.bitset {
+    display: grid;
+    grid-template-columns: 1fr;
+    justify-self: center;
+}
+
+.bit-row {
+    display: grid;
+    grid-template-columns: repeat(5,/*fit-content(44.8px)*/ 1fr);
+    grid-gap: 0 16px;
+    position: relative;
+}
+
+.bit-row > div.bit {
+    font-size: 40px;
+    cursor: pointer;
+    justify-self: center;
+}
+
+.bit-unit {
+    /* position: absolute;
+    top: -12px; */
+    grid-column: 1/-1;
+}
+
+.bit-offset {
+    /* position: absolute;
+    left: 114px;
+    bottom: -13px; */
+    grid-column: 1/-1;
+    align-self: center;
+    justify-self: end;
+    margin-right: 4px;
+}
+
+.result {
+    grid-column: 1/-1;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+}
+
+.result > p {
+    background: #EBEBEB;
+    padding: 10px 10px;
+    text-align: right;
+    font-size: 22px;
+    grid-column: 1/-1;
+}
+
+.bit-rubber:active {
+    background: #620594;
+}
+
+.bit-rubber {
+    display: grid;
+    width: 43px;
+    height: 43px;
+    background: #9809E7;
+    color: white;
+    text-align: center;
+    border-radius: 50%;
+    font-size: 25px;
+    justify-content: center;
+    align-content: center;
+    cursor: pointer;
+    align-self: center;
+    justify-self: end;
+}
+
+.bit-disabled {
+    color: #e0abfc;
+}
+
+.value-h,.value-v {
+    color: lightcoral;
+    font-size: 40px;
+    text-align: center;
+    min-width: 44.500px;
+}
+p.counter {
+    font-size: 28px;
+    text-align: center;
+}
